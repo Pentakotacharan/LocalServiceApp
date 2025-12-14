@@ -1,52 +1,116 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import auth from "@react-native-firebase/auth";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { GoogleSignin, statusCodes } from "@react-native-google-signin/google-signin";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-    ActivityIndicator,
-    Dimensions,
-    Image,
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  Dimensions,
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import axiosClient from "../../api/axiosClient";
 
 const { width } = Dimensions.get("window");
 
+// Configure Google Sign-In
 GoogleSignin.configure({
   webClientId: "75389684556-9fpsf9r4vjk0fq1f3gd5el03ijode172.apps.googleusercontent.com",
 });
+
+// ⚠️ HACK: Export this variable to share the confirmation object with the next screen
+// Expo Router params cannot pass functions (like confirmation.confirm)
+export let loginConfirmation: any = null;
 
 export default function AuthScreen() {
   const router = useRouter();
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
 
-  /* Save backend JWT */
-  const saveToken = async (token: string) => {
-    await AsyncStorage.setItem("token", token);
-    axiosClient.defaults.headers.common.Authorization = `Bearer ${token}`;
-    router.replace("/(tabs)");
+  /* Helper: Save Token & Redirect */
+  const handleBackendAuth = async (firebaseToken: string) => {
+    try {
+      // Send Firebase Token to your Backend
+      const res = await axiosClient.post("/auth/login-google-firebase", {
+        token: firebaseToken,
+      });
+      
+      const backendToken = res.data.token; // Assuming your API returns { token: "..." }
+
+      await AsyncStorage.setItem("token", backendToken);
+      axiosClient.defaults.headers.common.Authorization = `Bearer ${backendToken}`;
+      router.replace("/(tabs)");
+    } catch (error: any) {
+      console.error("Backend Auth Error:", error);
+      Alert.alert("Login Failed", "Could not verify with server.");
+    }
   };
 
-  /* Phone OTP */
-  const handlePhoneLogin = async () => {
-    if (!phone) return;
+  /* 🟢 Google Login Logic */
+  const handleGoogleLogin = async () => {
     setLoading(true);
     try {
+      // 1. Check Play Services
+      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+      
+      // 2. Get ID Token
+      const signInResult = await GoogleSignin.signIn();
+      let idToken =  signInResult.data?.idToken;
+
+      if (!idToken) throw new Error("No ID Token found");
+
+      // 3. Create Credential
+      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+      // 4. Sign In to Firebase
+      const userCredential = await auth().signInWithCredential(googleCredential);
+      console.log("Firebase User:", userCredential.user);
+      // 5. Get JWT Token for Backend
+      const firebaseToken = await userCredential.user.getIdToken();
+      console.log("Firebase Token:", firebaseToken);
+      // 6. Send to Backend
+      await handleBackendAuth(firebaseToken);
+
+    } catch (error: any) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        console.log("User cancelled login");
+      } else {
+        console.error(error);
+        Alert.alert("Google Error", error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* 🔵 Phone OTP Logic */
+  const handlePhoneLogin = async () => {
+    if (!phone || phone.length < 10) {
+        Alert.alert("Error", "Enter a valid phone number");
+        return;
+    }
+    setLoading(true);
+    try {
+      // 1. Send OTP
       const confirmation = await auth().signInWithPhoneNumber(`+91${phone}`);
-    //   router.push({
-    //     pathname: "/(auth)/otpVerification",
-    //     params: { confirmation },
-    //   });
+      
+      // 2. Store confirmation object in the exported variable
+      loginConfirmation = confirmation;
+
+      // 3. Navigate
+      router.push({
+        pathname: "./otpVerification",
+        params: { phone }, // Only pass serializable data (strings/numbers)
+      });
     } catch (e: any) {
-      alert(e.message);
+      Alert.alert("Error", e.message);
     } finally {
       setLoading(false);
     }
@@ -97,14 +161,14 @@ export default function AuthScreen() {
           </LinearGradient>
         </TouchableOpacity>
 
-        {/* OR */}
+        {/* OR Divider */}
         <View style={styles.orRow}>
           <View style={styles.line} />
           <Text style={styles.orText}>Or</Text>
           <View style={styles.line} />
         </View>
 
-        {/* Mail */}
+        {/* Mail Button */}
         <TouchableOpacity
           style={styles.socialBtn}
         //   onPress={() => router.push("/(auth)/loginEmail")}
@@ -112,10 +176,11 @@ export default function AuthScreen() {
           <Text style={styles.socialText}>Continue with Mail</Text>
         </TouchableOpacity>
 
-        {/* Google */}
+        {/* Google Button */}
         <TouchableOpacity
           style={styles.socialBtn}
-          onPress={() => alert("Google login here")}
+          onPress={handleGoogleLogin}
+          disabled={loading}
         >
           <Text style={styles.socialText}>Continue with Google</Text>
         </TouchableOpacity>
@@ -132,7 +197,7 @@ export default function AuthScreen() {
   );
 }
 
-/* 🎨 Styles (Mapped from Figma) */
+/* 🎨 Styles */
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: "#fff" },
   container: { flex: 1, padding: 24 },

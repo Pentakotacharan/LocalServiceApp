@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
-  Dimensions,
   Alert,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -14,43 +13,52 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axiosClient from "../../api/axiosClient";
 
-const { width } = Dimensions.get("window");
+// Import the confirmation object from your AuthScreen
+import { loginConfirmation } from "./auth"; // <-- Adjust path if needed
 
 export default function OtpVerificationScreen() {
   const router = useRouter();
-  const { confirmation, phone } = useLocalSearchParams<any>();
-
+  const { phone } = useLocalSearchParams<any>();
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
 
-  /**
-   * Verify OTP → Firebase → Backend → JWT
-   */
   const handleVerifyOtp = async () => {
     if (otp.length !== 6) {
       Alert.alert("Error", "Please enter valid 6 digit OTP");
       return;
     }
 
+    if (!loginConfirmation) {
+      Alert.alert("Error", "Session expired. Please try logging in again.");
+      router.back();
+      return;
+    }
+
     setLoading(true);
     try {
-      // 1️⃣ Firebase OTP confirmation
-      const userCredential = await confirmation.confirm(otp);
+      // 1️⃣ Firebase OTP confirmation using the imported object
+      const userCredential = await loginConfirmation.confirm(otp);
+      
+      // 2️⃣ Get Token
       const firebaseToken = await userCredential.user.getIdToken();
 
-      // 2️⃣ Send Firebase token to backend
+      // 3️⃣ Send to backend
       const res = await axiosClient.post("/auth/login-phone-firebase", {
         token: firebaseToken,
       });
 
-      // 3️⃣ Save backend JWT
+      // 4️⃣ Save & Redirect
       await AsyncStorage.setItem("token", res.data.token);
       axiosClient.defaults.headers.common.Authorization = `Bearer ${res.data.token}`;
 
-      // 4️⃣ Redirect to app
       router.replace("/(tabs)");
     } catch (err: any) {
-      Alert.alert("Invalid OTP", "Please try again");
+      console.log(err);
+      if (err.code === 'auth/invalid-verification-code') {
+        Alert.alert("Invalid Code", "The OTP you entered is incorrect.");
+      } else {
+        Alert.alert("Error", err.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -58,13 +66,11 @@ export default function OtpVerificationScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Title */}
       <Text style={styles.title}>Verify OTP</Text>
       <Text style={styles.subtitle}>
         Enter the 6-digit code sent to +91 {phone}
       </Text>
 
-      {/* OTP Input */}
       <TextInput
         value={otp}
         onChangeText={setOtp}
@@ -75,7 +81,6 @@ export default function OtpVerificationScreen() {
         placeholderTextColor="#999"
       />
 
-      {/* Verify Button */}
       <TouchableOpacity onPress={handleVerifyOtp} disabled={loading}>
         <LinearGradient
           colors={["#2D5FDE", "#183378"]}
@@ -89,7 +94,6 @@ export default function OtpVerificationScreen() {
         </LinearGradient>
       </TouchableOpacity>
 
-      {/* Resend */}
       <TouchableOpacity onPress={() => router.back()}>
         <Text style={styles.resendText}>
           Didn’t receive code? <Text style={styles.resendLink}>Resend</Text>

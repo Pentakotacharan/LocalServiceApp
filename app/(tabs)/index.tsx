@@ -35,7 +35,7 @@ export default function ClientHome() {
 
         <TouchableOpacity onPress={() => router.push("/(tabs)/profile")}>
           <Image
-            source={require("../../assets/profile.png")}
+            source={require("../../assets/images/profile.png")}
             style={styles.avatar}
           />
         </TouchableOpacity>

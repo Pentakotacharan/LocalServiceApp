@@ -1,14 +1,14 @@
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
+import React from "react";
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 const { width } = Dimensions.get("window");
 
@@ -24,7 +24,7 @@ export default function ClientIntroScreen() {
     <View style={styles.container}>
       {/* Illustration */}
       <Image
-        source={require("../../assets/client_intro.png")}
+        source={require("../../assets/images/client_intro.png")}
         style={styles.image}
         resizeMode="contain"
       />
