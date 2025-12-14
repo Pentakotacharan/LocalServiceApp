@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "75389684556",
+    "project_id": "lazy-gang",
+    "storage_bucket": "lazy-gang.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:75389684556:android:16058215256166321adde9",
+        "android_client_info": {
+          "package_name": "com.localservice.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "75389684556-9fpsf9r4vjk0fq1f3gd5el03ijode172.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDdGtTZ2_vVdOLpcMThwvBaA-Jvxw7CsA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "75389684556-9fpsf9r4vjk0fq1f3gd5el03ijode172.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
