@@ -8,6 +8,7 @@ export default function TabsLayout() {
         headerShown: false,
         tabBarStyle: { backgroundColor: "#000" },
         tabBarActiveTintColor: "#2D5FDE",
+        tabBarInactiveTintColor: "#777",
       }}
     >
       <Tabs.Screen
@@ -16,6 +17,26 @@ export default function TabsLayout() {
           title: "Home",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home-outline" size={size} color={color} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="tasks"
+        options={{
+          title: "Tasks",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="briefcase-outline" size={size} color={color} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="person-outline" size={size} color={color} />
           ),
         }}
       />
