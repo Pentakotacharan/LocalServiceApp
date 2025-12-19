@@ -46,18 +46,18 @@ export default function LoginEmail() {
       } else {
         userCred = await auth().signInWithEmailAndPassword(email, password);
       }
-
+      console.log("User Credential:", userCred);
       const firebaseToken = await userCred.user.getIdToken();
-
+      console.log("Firebase Token:", firebaseToken);
       const res = await axiosClient.post("/auth/login-email-firebase", {
         token: firebaseToken,
       });
 
       await AsyncStorage.setItem("token", res.data.token);
       axiosClient.defaults.headers.common.Authorization = `Bearer ${res.data.token}`;
-
+      alert("Success");
       // Redirect to role selection
-      router.replace("../(role)/selectRole");
+      // router.replace("../(role)/selectRole");
     } catch (err: any) {
       Alert.alert("Error", err.message);
     } finally {
@@ -67,6 +67,7 @@ export default function LoginEmail() {
 
   return (
     <View style={styles.container}>
+    
       <Text style={styles.title}>
         {isSignup ? "Create Account" : "Welcome Back"}
       </Text>
@@ -129,22 +130,23 @@ export default function LoginEmail() {
 /* 🎨 Styles (same theme) */
 const styles = StyleSheet.create({
   container: {
+    // marginTop :0,
     flex: 1,
-    backgroundColor: "#000",
+    backgroundColor: "#fff",
     padding: 24,
     justifyContent: "center",
   },
   title: {
     fontSize: 24,
     fontWeight: "700",
-    color: "#fff",
+    color: "#000",
     marginBottom: 30,
   },
   input: {
-    backgroundColor: "#111",
+    backgroundColor: "#fff",
     borderRadius: 12,
     padding: 14,
-    color: "#fff",
+    color: "#000",
     marginBottom: 16,
     borderWidth: 1,
     borderColor: "#333",

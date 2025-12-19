@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Stack, useRouter, Slot } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, View, StatusBar } from "react-native";
+import { ActivityIndicator, StatusBar, View } from "react-native";
 // 1. Remove SafeAreaView import from react-native
 
 export default function RootLayout() {
@@ -25,17 +25,17 @@ export default function RootLayout() {
   }, []);
 
   // 2. Redirect logic (Better than conditional rendering for Stacks)
-  useEffect(() => {
-    if (!isReady) return;
+  // useEffect(() => {
+  //   if (!isReady) return;
 
-    if (isAuthenticated) {
-      // If logged in, go to tabs (or your main flow)
-      router.replace("/(tabs)"); 
-    } else {
-      // If NOT logged in, go to Auth
-      router.replace("./(auth)");
-    }
-  }, [isReady, isAuthenticated]);
+  //   if (isAuthenticated) {
+  //     // If logged in, go to tabs (or your main flow)
+  //     router.replace("./(client)"); 
+  //   } else {
+  //     // If NOT logged in, go to Auth
+  //     router.replace("./(auth)");
+  //   }
+  // }, [isReady, isAuthenticated]);
 
   if (!isReady) {
     return (
@@ -51,11 +51,10 @@ export default function RootLayout() {
       
       {/* 3. Keep the Stack clean. Do not wrap it in SafeAreaView */}
       <Stack screenOptions={{ headerShown: false }}>
+    {/* <Stack.Screen name="(role)" /> */}
         <Stack.Screen name="(auth)" />
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="(role)" />
-        <Stack.Screen name="(client)" />
-        <Stack.Screen name="(provider)" />
+        <Stack.Screen name="(client)" /> 
+         {/* <Stack.Screen name="(tabs)" /> */}
       </Stack>
     </>
   );

@@ -46,7 +46,8 @@ export default function AuthScreen() {
 
       await AsyncStorage.setItem("token", backendToken);
       axiosClient.defaults.headers.common.Authorization = `Bearer ${backendToken}`;
-      router.replace("/(tabs)");
+      alert("Success");
+      router.replace("./roleSelection");
     } catch (error: any) {
       console.error("Backend Auth Error:", error);
       Alert.alert("Login Failed", "Could not verify with server.");
@@ -58,7 +59,7 @@ export default function AuthScreen() {
     setLoading(true);
     try {
       // 1. Check Play Services
-      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+      await GoogleSignin.hasPlayServices();
       
       // 2. Get ID Token
       const signInResult = await GoogleSignin.signIn();
@@ -68,7 +69,8 @@ export default function AuthScreen() {
 
       // 3. Create Credential
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-
+      console.log("hellll")
+      console.log(googleCredential);
       // 4. Sign In to Firebase
       const userCredential = await auth().signInWithCredential(googleCredential);
       console.log("Firebase User:", userCredential.user);
@@ -100,7 +102,7 @@ export default function AuthScreen() {
     try {
       // 1. Send OTP
       const confirmation = await auth().signInWithPhoneNumber(`+91${phone}`);
-      
+       console.log(confirmation);
       // 2. Store confirmation object in the exported variable
       loginConfirmation = confirmation;
 
@@ -121,15 +123,11 @@ export default function AuthScreen() {
       <View style={styles.container}>
         {/* Branding */}
         <View style={styles.brandContainer}>
-          <LinearGradient
-            colors={["#E2EBFF", "#FFFFFF"]}
-            style={styles.brandBg}
-          />
+        
           <Image
-            source={require("../../assets/images/icon.png")}
+            source={require("../../assets/images/banner.png")}
             style={styles.logo}
           />
-          <Text style={styles.brandText}>LAZYGANG</Text>
         </View>
 
         {/* Phone Input */}
@@ -171,7 +169,7 @@ export default function AuthScreen() {
         {/* Mail Button */}
         <TouchableOpacity
           style={styles.socialBtn}
-        //   onPress={() => router.push("/(auth)/loginEmail")}
+          onPress={() => router.push("./loginEmail")}
         >
           <Text style={styles.socialText}>Continue with Mail</Text>
         </TouchableOpacity>
@@ -209,7 +207,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: -40,
   },
-  logo: { width: 90, height: 90, marginTop: 60 },
+  logo: { width: 300, height: 200, marginTop: 60, borderRadius: 20 },
   brandText: {
     fontSize: 40,
     fontWeight: "900",
