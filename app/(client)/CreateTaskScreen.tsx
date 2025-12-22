@@ -15,6 +15,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
+import * as Location from "expo-location";
+import LocationPickerModal from "../(client)/components/LocationPickerModal";
+import axiosClient from "@/api/axiosClient";
 // --- MOCK DATA FOR SEARCH ---
 const MOCK_LOCATIONS = [
   { id: '1', address: 'Visakhapatnam, Andhra Pradesh' },
@@ -36,15 +39,42 @@ export default function CreateTaskScreen() {
   const [persons, setPersons] = useState(0);
   const [isRemote, setIsRemote] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState("");
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
 
   // Modal States
   const [isLocationModalVisible, setLocationModalVisible] = useState(false);
   const [isSuccessModalVisible, setSuccessModalVisible] = useState(false);
-
+   const [createdTask, setCreatedTask] = useState<any>(null);
   // Search Logic
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredLocations, setFilteredLocations] = useState(MOCK_LOCATIONS);
   const [tempSelected, setTempSelected] = useState("");
+   const getCurrentLocation = async () => {
+  try {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      alert("Permission to access location was denied");
+      return;
+    }
+
+    const location = await Location.getCurrentPositionAsync({
+      accuracy: Location.Accuracy.High,
+    });
+
+    const { latitude, longitude } = location.coords;
+
+    setCoords({
+      lat: latitude,
+      lng: longitude,
+    });
+
+    return { lat: latitude, lng: longitude };
+  } catch (err) {
+    console.error("Location error:", err);
+    alert("Unable to fetch location");
+  }
+};
+
 
   const handleSearch = (text: string) => {
     setSearchQuery(text);
@@ -63,31 +93,79 @@ export default function CreateTaskScreen() {
     setLocationModalVisible(false);
   };
 
-  const handlePost = () => {
-    // Basic validation
-    if (!title || !description) return;
-    
-    // Instead of navigating, show the Success Modal
+const handlePost = async () => {
+  try {
+    // 🔎 Validation
+    if (!title || !description) {
+      alert("Please enter title and description");
+      return;
+    }
+
+    if (!coords) {
+      alert("Please select a location");
+      return;
+    }
+
+    if (!pay || Number(pay) <= 0) {
+      alert("Please enter valid pay");
+      return;
+    }
+
+    const payload = {
+      category: title,            // or separate category field
+      description,
+      amount: Number(pay),
+      persons,
+      isRemote,
+      address: selectedAddress,
+      lat: coords.lat,
+      lng: coords.lng,
+      images: [],
+    };
+
+    // 🚀 Call backend
+    const res = await axiosClient.post("/tasks/create-order", payload);
+
+    const { task, order } = res.data;
+
+    // ✅ Show success modal
     setSuccessModalVisible(true);
-  };
 
-  const handleViewPost = () => {
-    setSuccessModalVisible(false);
-    // Navigate to Home or the Post details page
-    // navigation.goBack(); 
-   router.replace({
-  pathname: "./TaskDetailScreen",
-  params: {
-    title,
-    description,
-    pay,
-    persons: String(persons),
-   isRemote: isRemote ? "true" : "false",
-    address: selectedAddress,
-  },
-});
+    // Store for navigation after user clicks "View Post"
+    setCreatedTask({
+      task,
+      order,
+    });
 
-  };
+  } catch (err: any) {
+    console.error("Create task failed:", err?.response?.data || err.message);
+    alert("Failed to post task. Please try again.");
+  }
+};
+
+
+ const handleViewPost = () => {
+  if (!createdTask) return;
+
+  const { task, order } = createdTask;
+
+  setSuccessModalVisible(false);
+
+  router.push({
+    pathname: "./TaskDetailScreen",
+    params: {
+      taskId: task._id,
+      title: task.category,
+      description: task.description,
+      pay: String(task.amount),
+      persons: String(persons),
+      isRemote: isRemote ? "true" : "false",
+      address: selectedAddress,
+      // razorpayOrderId: order.id,
+    },
+  });
+};
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -106,7 +184,6 @@ export default function CreateTaskScreen() {
         <ScrollView showsVerticalScrollIndicator={false}>
           {/* TASK TITLE + DESCRIPTION */}
           <LinearGradient colors={["#1F3FA3", "#2F5BEA"]} style={styles.card}>
-            <Text style={styles.label}>Task Title</Text>
             <TextInput
               placeholder="Task Title"
               placeholderTextColor="rgba(255,255,255,0.6)"
@@ -208,7 +285,18 @@ export default function CreateTaskScreen() {
         {/* ================================================= */}
         {/* LOCATION SEARCH MODAL               */}
         {/* ================================================= */}
-        <Modal
+
+        <LocationPickerModal
+          visible={isLocationModalVisible}
+          onClose={() => setLocationModalVisible(false)}
+          onSelect={({ address, lat, lng }) => {
+            setSelectedAddress(address);
+            setCoords({ lat, lng });
+            setLocationModalVisible(false);
+          }}
+        />
+
+        {/* <Modal
           animationType="fade"
           transparent={true}
           visible={isLocationModalVisible}
@@ -219,7 +307,7 @@ export default function CreateTaskScreen() {
             style={styles.modalOverlay}
           >
             <View style={styles.locationModalContainer}>
-              {/* Top Search Bar (White) */}
+         
               <View style={styles.locSearchBar}>
                  <Ionicons name="search" size={20} color="#1F3FA3" />
                  <TextInput 
@@ -232,7 +320,6 @@ export default function CreateTaskScreen() {
                  />
               </View>
 
-              {/* White List Container */}
               <View style={styles.locListContainer}>
                 <FlatList 
                   data={filteredLocations}
@@ -261,7 +348,6 @@ export default function CreateTaskScreen() {
                 />
               </View>
 
-              {/* Floating Save Button */}
               <View style={styles.saveBtnContainer}>
                  <TouchableOpacity style={styles.saveBtn} onPress={handleSaveLocation}>
                    <Text style={styles.saveBtnText}>Save</Text>
@@ -269,7 +355,9 @@ export default function CreateTaskScreen() {
               </View>
             </View>
           </KeyboardAvoidingView>
-        </Modal>
+        </Modal> */}
+
+
 
         {/* ================================================= */}
         {/* SUCCESS MODAL (Task Posted)         */}

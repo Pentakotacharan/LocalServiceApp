@@ -55,7 +55,7 @@
 //               <Text style={styles.label}>What is your name?</Text>
 //               <TextInput 
 //                 style={styles.input} 
-//                 placeholder="Enter your name..." 
+//                 placeholderTextColor="#000" placeholder="Enter your name..." 
 //                 placeholderTextColor="#9CA3AF"
 //                 value={name}
 //                 onChangeText={setName}
@@ -69,7 +69,7 @@
 //                 <View style={styles.inputIconWrapper}>
 //                   <TextInput 
 //                     style={[styles.input, { flex: 1, borderWidth: 0 }]} 
-//                     placeholder="DD-MM-YYYY" 
+//                     placeholderTextColor="#000" placeholder="DD-MM-YYYY" 
 //                     placeholderTextColor="#9CA3AF"
 //                     value={dob}
 //                     onChangeText={setDob}
@@ -84,7 +84,7 @@
 //                   {/* For now using TextInput, replace with Modal/Picker later */}
 //                   <TextInput 
 //                     style={[styles.input, { flex: 1, borderWidth: 0 }]} 
-//                     placeholder="Select one" 
+//                     placeholderTextColor="#000" placeholder="Select one" 
 //                     placeholderTextColor="#9CA3AF"
 //                     value={gender}
 //                     onChangeText={setGender}
@@ -99,7 +99,7 @@
 //               <Text style={styles.label}>What is your skill?</Text>
 //               <TextInput 
 //                 style={styles.input} 
-//                 placeholder="Enter your skill..." 
+//                 placeholderTextColor="#000" placeholder="Enter your skill..." 
 //                 placeholderTextColor="#9CA3AF"
 //                 value={skill}
 //                 onChangeText={setSkill}
@@ -111,7 +111,7 @@
 //               <Text style={styles.label}>Location?</Text>
 //               <TextInput 
 //                 style={styles.input} 
-//                 placeholder="Enter Address or Select location" 
+//                 placeholderTextColor="#000" placeholder="Enter Address or Select location" 
 //                 placeholderTextColor="#9CA3AF"
 //                 value={location}
 //                 onChangeText={setLocation}
@@ -257,7 +257,7 @@ export default function UserInfoScreen() {
         {/* Name */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>What is your name?</Text>
-          <TextInput style={styles.input} placeholder="Enter your name..." value={name} onChangeText={setName} />
+          <TextInput style={styles.input}  placeholder="Enter your name..." placeholderTextColor="#000" value={name} onChangeText={setName} />
         </View>
 
         {/* DOB & Gender */}
@@ -265,14 +265,14 @@ export default function UserInfoScreen() {
           <View style={[styles.inputGroup, { flex: 1, marginRight: 10 }]}>
             <Text style={styles.label}>Date of birth</Text>
             <View style={styles.inputIconWrapper}>
-              <TextInput style={[styles.input, { flex: 1, borderWidth: 0 }]} placeholder="DD-MM-YYYY" value={dob} onChangeText={setDob} />
+              <TextInput style={[styles.input, { flex: 1, borderWidth: 0 }]} placeholderTextColor="#000" placeholder="DD-MM-YYYY" value={dob} onChangeText={setDob} />
               <Calendar color="#9CA3AF" size={20} />
             </View>
           </View>
           <View style={[styles.inputGroup, { flex: 1, marginLeft: 10 }]}>
             <Text style={styles.label}>Gender</Text>
             <View style={styles.inputIconWrapper}>
-              <TextInput style={[styles.input, { flex: 1, borderWidth: 0 }]} placeholder="Select" value={gender} onChangeText={setGender} />
+              <TextInput style={[styles.input, { flex: 1, borderWidth: 0 }]} placeholderTextColor="#000" placeholder="Select" value={gender} onChangeText={setGender} />
               <ChevronDown color="#9CA3AF" size={20} />
             </View>
           </View>
@@ -281,13 +281,13 @@ export default function UserInfoScreen() {
         {/* Skill */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>What is your skill?</Text>
-          <TextInput style={styles.input} placeholder="Enter your skill..." value={skill} onChangeText={setSkill} />
+          <TextInput style={styles.input} placeholderTextColor="#000" placeholder="Enter your skill..." value={skill} onChangeText={setSkill} />
         </View>
 
         {/* Location */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Location?</Text>
-          <TextInput style={styles.input} placeholder="Enter Address" value={location} onChangeText={setLocation} />
+          <TextInput style={styles.input} placeholderTextColor="#000" placeholder="Enter Address" value={location} onChangeText={setLocation} />
         </View>
 
         <TouchableOpacity style={styles.button} onPress={handleContinue}>

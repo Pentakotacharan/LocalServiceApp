@@ -102,7 +102,7 @@ export default function KycScreen() {
       <ScrollView contentContainerStyle={styles.formContainer}>
         {/* Aadhaar Section */}
         <Text style={styles.label}>Aadhaar No.</Text>
-        <TextInput style={styles.input} placeholder="12 digit number" keyboardType="numeric" maxLength={12} value={aadhaarNo} onChangeText={setAadhaarNo} />
+        <TextInput style={styles.input} placeholderTextColor="#000" placeholder="12 digit number" keyboardType="numeric" maxLength={12} value={aadhaarNo} onChangeText={setAadhaarNo} />
         
         <Text style={[styles.label, { marginTop: 15 }]}>Upload Aadhaar Images</Text>
         <View style={styles.row}>
@@ -113,7 +113,7 @@ export default function KycScreen() {
 
         {/* PAN Section */}
         <Text style={[styles.label, { marginTop: 25 }]}>Pan Card</Text>
-        <TextInput style={styles.input} placeholder="PAN Number" autoCapitalize="characters" maxLength={10} value={panNo} onChangeText={setPanNo} />
+        <TextInput style={styles.input} placeholderTextColor="#000" placeholder="PAN Number" autoCapitalize="characters" maxLength={10} value={panNo} onChangeText={setPanNo} />
 
         <Text style={[styles.label, { marginTop: 15 }]}>Upload Pan Images</Text>
         <View style={styles.row}>

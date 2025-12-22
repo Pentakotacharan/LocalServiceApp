@@ -1,61 +1,76 @@
 import { Tabs } from "expo-router";
-import { View, StyleSheet } from "react-native";
+import { View, Platform, StyleSheet } from "react-native";
 import { Home, Briefcase, Wallet, User } from "lucide-react-native";
 
 export default function ProviderTabsLayout() {
   return (
-    <Tabs
-      screenOptions={{
-        headerShown: false,
-        tabBarStyle: {
-          height: 70,
-          paddingBottom: 10,
-          paddingTop: 10,
-          backgroundColor: "white",
-          borderTopWidth: 0,
-          elevation: 10,
-          shadowColor: "#000",
-          shadowOpacity: 0.1,
-          shadowRadius: 10,
-          borderRadius: 20, // Rounded corners for floating effect (optional)
-          margin: 10,       // Floating tab bar look (optional)
-          position: 'absolute',
-        },
-        tabBarActiveTintColor: "#1E40AF", // Blue when active
-        tabBarInactiveTintColor: "#9CA3AF", // Grey when inactive
-        tabBarLabelStyle: {
-          fontSize: 12,
-          fontWeight: "600",
-          marginBottom: 5,
-        },
-      }}
-    >
+   <Tabs
+  screenOptions={{
+    headerShown: false,
+    tabBarShowLabel: true,
+
+    tabBarStyle: {
+      position: "absolute",
+      bottom: 25,
+      left: 20,
+      right: 20,
+      backgroundColor: "white",
+      borderRadius: 25,
+      height: 80,              // ⬅️ increase height
+      borderTopWidth: 0,
+
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.1,
+      shadowRadius: 10,
+      elevation: 5,
+    },
+
+    tabBarItemStyle: {
+      paddingVertical: 6,      // ⬅️ use vertical padding instead
+    },
+
+    tabBarLabelStyle: {
+      fontSize: 11,
+      fontWeight: "600",
+      marginTop: 2,           // ⬅️ push label slightly down
+    },
+
+    tabBarActiveTintColor: "#1E3A8A",
+    tabBarInactiveTintColor: "#94A3B8",
+  }}
+>
+
       <Tabs.Screen
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: ({ color, size }) => <Home color={color} size={24} />,
+             tabBarLabel: "Home",
+          tabBarIcon: ({ color }) => <Home color={color} size={24} />,
         }}
       />
       <Tabs.Screen
         name="tasks"
         options={{
           title: "Tasks",
-          tabBarIcon: ({ color, size }) => <Briefcase color={color} size={24} />,
+                 tabBarLabel: "Tasks",
+          tabBarIcon: ({ color }) => <Briefcase color={color} size={24} />,
         }}
       />
       <Tabs.Screen
         name="wallet"
         options={{
           title: "Wallet",
-          tabBarIcon: ({ color, size }) => <Wallet color={color} size={24} />,
+                 tabBarLabel: "Wallet",
+          tabBarIcon: ({ color }) => <Wallet color={color} size={24} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: "Profile",
-          tabBarIcon: ({ color, size }) => <User color={color} size={24} />,
+         tabBarLabel: "Profile",
+          tabBarIcon: ({ color }) => <User color={color} size={24} />,
         }}
       />
     </Tabs>

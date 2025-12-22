@@ -24,7 +24,7 @@ import { useEffect, useState } from "react";
 import { View, ActivityIndicator } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-
+import axiosClient from "@/api/axiosClient";
 // Replace with your actual backend URL
 const API_URL = "http://192.168.1.5:5000/api"; 
 
@@ -47,9 +47,7 @@ export default function ProviderLayout() {
       }
 
       // Fetch latest user profile to check status
-      const response = await axios.get(`${API_URL}/users/me`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axiosClient.get(`/users/me`);
 
       const user = response.data;
       const status = user.kycStatus; // 'not_submitted', 'pending', 'approved', 'rejected'

@@ -56,7 +56,7 @@ export default function AuthScreen() {
 
   /* 🟢 Google Login Logic */
   const handleGoogleLogin = async () => {
-    setLoading(true);
+    // setLoading(true);
     try {
       // 1. Check Play Services
       await GoogleSignin.hasPlayServices();
@@ -87,7 +87,8 @@ export default function AuthScreen() {
         console.error(error);
         Alert.alert("Google Error", error.message);
       }
-    } finally {
+    } 
+    finally {
       setLoading(false);
     }
   };
@@ -178,7 +179,6 @@ export default function AuthScreen() {
         <TouchableOpacity
           style={styles.socialBtn}
           onPress={handleGoogleLogin}
-          disabled={loading}
         >
           <Text style={styles.socialText}>Continue with Google</Text>
         </TouchableOpacity>

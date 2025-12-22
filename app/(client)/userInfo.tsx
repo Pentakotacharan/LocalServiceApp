@@ -32,28 +32,27 @@ export default function UserInfoScreen() {
     // Simple logic to determine role from text input, or default to client
     // In a real app, you might use a Dropdown or 2 Selection Cards instead of a TextInput for Role.
     // For now, we default to 'client' unless they type 'work' or 'provider'.
-    const determinedRole = roleInput.toLowerCase().includes('work') || roleInput.toLowerCase().includes('job') 
-      ? 'provider' 
-      : 'client';
-    router.replace('/(client)/home');
+    // const determinedRole = roleInput.toLowerCase().includes('work') || roleInput.toLowerCase().includes('job') 
+    //   ? 'provider' 
+    //   : 'client';
+  
     setLoading(true);
     try {
       // 1. Send data to Backend
       const res = await axiosClient.put('/users/profile', {
         name: name,
-        role: determinedRole
       });
 
       // 2. Update Local Storage if you store user details there
-      await AsyncStorage.setItem('userRole', determinedRole);
+      // await AsyncStorage.setItem('userRole', determinedRole);
       await AsyncStorage.setItem('userName', name);
-
+       router.push('/(client)/home');
       // 3. Navigate based on Role
     //   if (determinedRole === 'client') {
-    //     router.replace('/(client)/home');
+    //     router.push('/(client)/home');
     //   } else {
     //     // If you have a provider home, go there, otherwise go to client home or KYC
-    //     router.replace('/(provider)/dashboard'); 
+    //     router.push('/(provider)/dashboard'); 
     //   }
 
     } catch (error: any) {

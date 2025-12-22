@@ -81,14 +81,11 @@ export default function OtpVerificationScreen() {
 
     setLoading(true);
     try {
-      console.log("Verifying OTP:", otp);
-      console.log("Using confirmation object:", loginConfirmation);
       // 1️⃣ Firebase OTP confirmation
       const userCredential = await loginConfirmation.confirm(otp);
       
       // 2️⃣ Get Token
       const firebaseToken = await userCredential.user.getIdToken();
-      console.log("Firebase Token:", firebaseToken);
       // 3️⃣ Send to backend
       const res = await axiosClient.post("/auth/login-phone-firebase", {
         token: firebaseToken,

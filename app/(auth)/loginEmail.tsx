@@ -46,16 +46,15 @@ export default function LoginEmail() {
       } else {
         userCred = await auth().signInWithEmailAndPassword(email, password);
       }
-      console.log("User Credential:", userCred);
       const firebaseToken = await userCred.user.getIdToken();
-      console.log("Firebase Token:", firebaseToken);
       const res = await axiosClient.post("/auth/login-email-firebase", {
         token: firebaseToken,
       });
 
       await AsyncStorage.setItem("token", res.data.token);
       axiosClient.defaults.headers.common.Authorization = `Bearer ${res.data.token}`;
-      alert("Success");
+      
+      router.replace("./roleSelection");
       // Redirect to role selection
       // router.replace("../(role)/selectRole");
     } catch (err: any) {

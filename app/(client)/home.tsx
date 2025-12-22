@@ -260,6 +260,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 const categories = [
   { label: "Cooking", icon: "restaurant-outline" },
   { label: "Construction", icon: "hammer-outline" },
@@ -274,7 +275,8 @@ const categories = [
 export default function ClientHomeScreen() {
   const navigation = useRouter();
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}> 
+    
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* HEADER */}
         <View style={styles.header}>
@@ -289,7 +291,7 @@ export default function ClientHomeScreen() {
         </View>
 
         {/* POST TASK CARD */}
-        <TouchableOpacity onPress={() => navigation.replace("./CreateTaskScreen")}>
+        <TouchableOpacity onPress={() => navigation.push("./CreateTaskScreen")}>
           <LinearGradient
             colors={["#1F3FA3", "#2F5BEA"]}
             style={styles.postCard}
@@ -309,7 +311,7 @@ export default function ClientHomeScreen() {
             <TouchableOpacity
               key={item.label}
               style={styles.categoryCard}
-              onPress={() => navigation.replace("./CreateTaskScreen")}
+              onPress={() => navigation.push("./CreateTaskScreen")}
               // onPress={() =>
               //   navigation.navigate("CreateTaskDetails", {
               //     category: item.label,
@@ -340,7 +342,7 @@ export default function ClientHomeScreen() {
           <Text style={styles.inactiveText}>Tasks</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

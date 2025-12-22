@@ -92,7 +92,7 @@ export default function TaskDetailScreen() {
 
       {/* BOTTOM BUTTON */}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.checkBtn} onPress={() => router.replace("./CheckRequestsScreen")}>
+        <TouchableOpacity style={styles.checkBtn} onPress={() => router.push("./CheckRequestsScreen")}>
           <Text style={styles.checkBtnText}>Check Requests</Text>
         </TouchableOpacity>
       </View>

@@ -1,31 +1,33 @@
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from 'expo-router';
 import { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useRouter } from 'expo-router';
+import axiosClient from "../../api/axiosClient";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export default function RoleSelectionScreen({ navigation }: any) {
   const [selectedRole, setSelectedRole] = useState<"client" | "provider" | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const handleContinue = async () => {
     if (!selectedRole) return;
-
+    const token = AsyncStorage.getItem("token");
     try {
       setLoading(true);
 
-      // await axios.post(
-      //   "/api/v1/users/set-role",
-      //   { role: selectedRole },
-      //   { headers: { Authorization: `Bearer YOUR_JWT_TOKEN` } }
-      // );
+      await axiosClient.post(
+        "/users/set-role",
+        { role: selectedRole }
+      );
 
       if (selectedRole === "client") {
       router.replace("/(client)/userInfo");
       } 
-      // else {
-      //   navigation.replace("KycBasicDetails");
-      // }
+      else {
+        router.replace("/(provider)/userInfo");
+      }
     } catch (error) {
       console.error("Role selection failed", error);
     } finally {
