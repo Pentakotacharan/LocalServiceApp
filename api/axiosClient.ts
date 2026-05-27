@@ -7,7 +7,7 @@ import axios from "axios";
  *  - http://192.168.1.10:4000/api/v1
  *  - https://api.yourdomain.com/api/v1
  */
-const BASE_URL = "https://service-app-backend-two.vercel.app/api/v1";
+const BASE_URL = "http://192.168.1.10:4000/api/v1";
 
 const axiosClient = axios.create({
   baseURL: BASE_URL,
@@ -31,7 +31,7 @@ axiosClient.interceptors.request.use(
 
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 /**
@@ -43,8 +43,8 @@ axiosClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const status = error?.response?.status;
-     console.log("Response Error Status:", status);
-     console.log(error?.response)
+    console.log("Response Error Status:", status);
+    console.log(error?.response);
     if (status === 401) {
       // Token expired / invalid
       await AsyncStorage.removeItem("token");
@@ -55,7 +55,7 @@ axiosClient.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosClient;

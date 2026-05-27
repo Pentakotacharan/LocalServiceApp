@@ -1,6 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import auth from "@react-native-firebase/auth";
-import { GoogleSignin, statusCodes } from "@react-native-google-signin/google-signin";
+import {
+  GoogleSignin,
+  statusCodes,
+} from "@react-native-google-signin/google-signin";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -22,7 +25,8 @@ const { width } = Dimensions.get("window");
 
 // Configure Google Sign-In
 GoogleSignin.configure({
-  webClientId: "75389684556-9fpsf9r4vjk0fq1f3gd5el03ijode172.apps.googleusercontent.com",
+  webClientId:
+    "599637307694-hqhcl7bjnd4126elhounucglpdml3ur8.apps.googleusercontent.com",
 });
 
 // ⚠️ HACK: Export this variable to share the confirmation object with the next screen
@@ -41,7 +45,7 @@ export default function AuthScreen() {
       const res = await axiosClient.post("/auth/login-google-firebase", {
         token: firebaseToken,
       });
-      
+
       const backendToken = res.data.token; // Assuming your API returns { token: "..." }
 
       await AsyncStorage.setItem("token", backendToken);
@@ -60,26 +64,26 @@ export default function AuthScreen() {
     try {
       // 1. Check Play Services
       await GoogleSignin.hasPlayServices();
-      
+
       // 2. Get ID Token
       const signInResult = await GoogleSignin.signIn();
-      let idToken =  signInResult.data?.idToken;
+      let idToken = signInResult.data?.idToken;
 
       if (!idToken) throw new Error("No ID Token found");
 
       // 3. Create Credential
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-      console.log("hellll")
+      console.log("hellll");
       console.log(googleCredential);
       // 4. Sign In to Firebase
-      const userCredential = await auth().signInWithCredential(googleCredential);
+      const userCredential =
+        await auth().signInWithCredential(googleCredential);
       console.log("Firebase User:", userCredential.user);
       // 5. Get JWT Token for Backend
       const firebaseToken = await userCredential.user.getIdToken();
       console.log("Firebase Token:", firebaseToken);
       // 6. Send to Backend
       await handleBackendAuth(firebaseToken);
-
     } catch (error: any) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         console.log("User cancelled login");
@@ -87,8 +91,7 @@ export default function AuthScreen() {
         console.error(error);
         Alert.alert("Google Error", error.message);
       }
-    } 
-    finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -96,14 +99,14 @@ export default function AuthScreen() {
   /* 🔵 Phone OTP Logic */
   const handlePhoneLogin = async () => {
     if (!phone || phone.length < 10) {
-        Alert.alert("Error", "Enter a valid phone number");
-        return;
+      Alert.alert("Error", "Enter a valid phone number");
+      return;
     }
     setLoading(true);
     try {
       // 1. Send OTP
       const confirmation = await auth().signInWithPhoneNumber(`+91${phone}`);
-       console.log(confirmation);
+      console.log(confirmation);
       // 2. Store confirmation object in the exported variable
       loginConfirmation = confirmation;
 
@@ -124,7 +127,6 @@ export default function AuthScreen() {
       <View style={styles.container}>
         {/* Branding */}
         <View style={styles.brandContainer}>
-        
           <Image
             source={require("../../assets/images/banner.png")}
             style={styles.logo}
@@ -176,10 +178,7 @@ export default function AuthScreen() {
         </TouchableOpacity>
 
         {/* Google Button */}
-        <TouchableOpacity
-          style={styles.socialBtn}
-          onPress={handleGoogleLogin}
-        >
+        <TouchableOpacity style={styles.socialBtn} onPress={handleGoogleLogin}>
           <Text style={styles.socialText}>Continue with Google</Text>
         </TouchableOpacity>
 

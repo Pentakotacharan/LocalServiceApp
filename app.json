@@ -10,10 +10,13 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.localservice.app",
+      "bundleIdentifier": "com.service.app",
       "googleServicesFile": "./GoogleService-Info.plist",
        "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "We use your location to find nearby service providers."
+      },
+      "config": {
+        "googleMapsApiKey": "YOUR_IOS_GOOGLE_MAPS_API_KEY"
       }
     },
     "android": {
@@ -23,11 +26,19 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "edgeToEdgeEnabled": true,
-      "permissions": ["ACCESS_FINE_LOCATION"],
+     "edgeToEdgeEnabled": true,
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ],
       "predictiveBackGestureEnabled": false,
-      "package": "com.localservice.app",
-      "googleServicesFile": "./google-services.json"
+      "package": "com.service.app",
+      "googleServicesFile": "./google-services.json",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyASVVEx93b_ynZPSFhgquH_LwntbD9qc2c"
+        }
+      }
     },
     "web": {
       "output": "static",

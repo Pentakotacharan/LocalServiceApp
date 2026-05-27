@@ -1,49 +1,42 @@
 {
   "project_info": {
-    "project_number": "75389684556",
-    "project_id": "lazy-gang",
-    "storage_bucket": "lazy-gang.firebasestorage.app"
+    "project_number": "599637307694",
+    "project_id": "localserviceapp-39bf1",
+    "storage_bucket": "localserviceapp-39bf1.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:75389684556:android:16058215256166321adde9",
+        "mobilesdk_app_id": "1:599637307694:android:f0409dfbed20d921ce8abf",
         "android_client_info": {
-          "package_name": "com.localservice.app"
+          "package_name": "com.service.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "75389684556-o4enn0tdm97p4n2sin6tnhho5s95vsbd.apps.googleusercontent.com",
+          "client_id": "599637307694-4fdhsjub9ajni7cblnq52r09ahamhdhf.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.localservice.app",
+            "package_name": "com.service.app",
             "certificate_hash": "92f185f3ae74430792f3b7db3006534b52df4032"
           }
         },
         {
-          "client_id": "75389684556-0ihke1dfphdoom5tiq175hinam8qv3vl.apps.googleusercontent.com",
+          "client_id": "599637307694-hqhcl7bjnd4126elhounucglpdml3ur8.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDDdGtTZ2_vVdOLpcMThwvBaA-Jvxw7CsA"
+          "current_key": "AIzaSyCEhXNTnPW32t9REo5wf33lcjEgrqfO7-g"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "75389684556-0ihke1dfphdoom5tiq175hinam8qv3vl.apps.googleusercontent.com",
+              "client_id": "599637307694-hqhcl7bjnd4126elhounucglpdml3ur8.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "75389684556-ds0vgculfp6ovhup9mup6dtiie95pjdm.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.localservice.app"
-              }
             }
           ]
         }
